@@ -1,10 +1,10 @@
 # KEHA MCP
 
-WordPress-pluginet bag forbindelsen **keha wp mcp** til [keha.dk](https://keha.dk). Det eksponerer 22 MCP-værktøjer til indhold, medier og temafiler uden WPVibe.
+WordPress-pluginet bag forbindelsen **keha wp mcp** til [keha.dk](https://keha.dk). Version 0.3.0 eksponerer 28 MCP-værktøjer til indhold, medier, temafiler og afgrænset filadgang til `/ad/` uden WPVibe.
 
 ## Version og kilde
 
-Dette repository indeholder kildekoden fra installationspakken `keha-mcp-0.2.1.zip`. Pluginfilerne er importeret uændret.
+Grundlaget er installationspakken `keha-mcp-0.2.1.zip`. Version 0.3.0 tilføjer filværktøjer til Aktivitetsdesigner. OAuth, forbindelser, endpoint og eksisterende værktøjer bevares.
 
 ## Installation
 
@@ -33,6 +33,7 @@ Se [pluginets vejledning](keha-mcp/readme.txt) for opsætning, værktøjer, adga
 - `keha-mcp/includes/abilities-content.php`: sider, indlæg, kategorier og tags.
 - `keha-mcp/includes/abilities-media.php`: mediebibliotek og uploads.
 - `keha-mcp/includes/abilities-theme.php`: læsning, ændring og backup af temafiler.
+- `keha-mcp/includes/abilities-ad.php`: filadgang afgrænset til `/ad/`, versionskontrol og private backups.
 - `keha-mcp/includes/oauth.php`: OAuth og tokengodkendelse.
 - `keha-mcp/includes/admin.php`: administrationsside.
 - `keha-mcp/includes/helpers.php`: fælles hjælpefunktioner.
@@ -40,3 +41,11 @@ Se [pluginets vejledning](keha-mcp/readme.txt) for opsætning, værktøjer, adga
 ## Licens
 
 Pluginets kildefil angiver **GPL-2.0-or-later**.
+
+## AD-filer og kontrol
+
+Se [AD-vejledningen](docs/ad-files.md) for installation, værktøjer, backupplacering og eksempler.
+
+Kør `php tests/ad-files.php`, `php tests/ad-files.php --disallow-edit` og `php tests/ad-files.php --disallow-mods`. Testene anvender rigtige midlertidige filer og lette WordPress-stubs. De erstatter ikke en kontrol af MCP-endpointet efter installation.
+
+På Windows kan junction-afgrænsningen testes med `node tests/junctions.cjs C:\sti\til\php.exe`. Byg installationspakken med `python build.py`; scriptet kontrollerer hele ZIP-indholdet og skriver en SHA-256-fil i `dist/`.

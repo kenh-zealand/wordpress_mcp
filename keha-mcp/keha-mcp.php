@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: KEHA MCP
- * Description: Egen MCP-server til keha.dk med indbygget OAuth 2.1, så den kan bruges som custom connector i claude.ai. Værktøjer til indlæg og sider (inkl. publicering), kategorier/tags, medier og temafiler. Kræver pluginet "MCP Adapter".
- * Version:     0.2.1
+ * Description: Egen MCP-server til keha.dk med OAuth 2.1 og værktøjer til indhold, medier, temafiler og afgrænset filadgang til /ad/. Kræver pluginet "MCP Adapter".
+ * Version:     0.3.0
  * Requires at least: 6.9
  * Requires PHP: 7.4
  * Author:      Kenneth
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'KEHA_MCP_VERSION', '0.2.1' );
+define( 'KEHA_MCP_VERSION', '0.3.0' );
 define( 'KEHA_MCP_FILE', __FILE__ );
 define( 'KEHA_MCP_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -23,6 +23,7 @@ require_once KEHA_MCP_DIR . 'includes/oauth.php';
 require_once KEHA_MCP_DIR . 'includes/abilities-content.php';
 require_once KEHA_MCP_DIR . 'includes/abilities-media.php';
 require_once KEHA_MCP_DIR . 'includes/abilities-theme.php';
+require_once KEHA_MCP_DIR . 'includes/abilities-ad.php';
 
 if ( is_admin() ) {
 	require_once KEHA_MCP_DIR . 'includes/admin.php';
@@ -41,7 +42,7 @@ register_deactivation_hook( __FILE__, array( 'Keha_MCP_OAuth', 'deactivate' ) );
 add_action( 'wp_abilities_api_categories_init', function () {
 	wp_register_ability_category( 'keha', array(
 		'label'       => 'keha.dk',
-		'description' => 'Indholds-, medie- og temaværktøjer til keha.dk.',
+		'description' => 'Indholds-, medie-, tema- og AD-filværktøjer til keha.dk.',
 	) );
 } );
 
@@ -49,6 +50,7 @@ add_action( 'wp_abilities_api_init', function () {
 	keha_mcp_register_content_abilities();
 	keha_mcp_register_media_abilities();
 	keha_mcp_register_theme_abilities();
+	keha_mcp_register_ad_abilities();
 } );
 
 /* -------------------------------------------------------------------------
@@ -61,7 +63,7 @@ add_action( 'mcp_adapter_init', function ( $adapter ) {
 		'keha-mcp',                                   // REST-namespace
 		'mcp',                                        // REST-route
 		'keha.dk MCP',                                // Navn
-		'Indhold, medier og temafiler på keha.dk',    // Beskrivelse
+		'Indhold, medier, temafiler og /ad/-filer på keha.dk', // Beskrivelse
 		'v' . KEHA_MCP_VERSION,                       // Version
 		array( \WP\MCP\Transport\HttpTransport::class ),
 		\WP\MCP\Infrastructure\ErrorHandling\ErrorLogMcpErrorHandler::class,
