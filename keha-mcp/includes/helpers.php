@@ -35,6 +35,13 @@ function keha_mcp_ability_names() {
 		'keha/edit-theme-file',
 		'keha/list-theme-backups',
 		'keha/restore-theme-backup',
+		// Afgrænset filadgang til Aktivitetsdesigner.
+		'keha/list-ad-files',
+		'keha/read-ad-file',
+		'keha/write-ad-file',
+		'keha/edit-ad-file',
+		'keha/list-ad-backups',
+		'keha/restore-ad-backup',
 	);
 }
 
